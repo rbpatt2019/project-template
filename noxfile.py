@@ -14,9 +14,9 @@ def lint(session):
     # As pylint requires installed packages and nox spins off isolated venvs,
     # Import error is silenced. This is checked by pyright, and helps 
     # prevent lengthy installs
-    args = session.posargs or ["--disable=import-error"] + LOCATIONS
+    args = session.posargs or LOCATIONS
     constrained_install(session, 'pylint')
-    session.run('pylint', *args)
+    session.run('pylint', "--disable=import-error", *args)
 
 @nox.session(python=VERSIONS)
 def tests(session):
