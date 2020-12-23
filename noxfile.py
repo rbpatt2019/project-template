@@ -29,6 +29,13 @@ def format(session):
 
 
 @nox.session(python=VERSIONS)
+def security(session):
+    # I'd like to move skip to config file, but bandit doesn't yet support pyproject
+    args = session.posargs or LOCATIONS
+    constrained_install(session, 'bandit')
+    session.run('bandit', '--skip=B101', '-r', *args) 
+
+@nox.session(python=VERSIONS)
 def lint(session):
     # As pylint requires installed packages and nox spins off isolated venvs,
     # Import error is silenced. This is checked by pyright, and helps
