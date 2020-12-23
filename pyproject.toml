@@ -19,6 +19,7 @@ pytest-sugar = "^0.9.4"
 pytest-mock = "^3.4.0"
 pytest-cov = "^2.10.1"
 six = "^1.15.0"
+pylint = "^2.6.0"
 
 [tool.coverage.run]
 branch = true
@@ -34,6 +35,15 @@ addopts = """
 --ignore=docs
 --diff-type=split
 """
+
+[tool.pylint.messages_control]
+disable = "C"
+
+[tool.pylint.similarities]
+min-similarity-lines = 5
+ignore-comments = true
+ignore-docstrings = true
+ignore-imports = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
