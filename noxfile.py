@@ -5,7 +5,8 @@ import nox
 LOCATIONS = ["src", "tests", "noxfile.py"]
 VERSIONS = ["3.9", "3.8", "3.7"]
 
-
+# There's a good chance that this will get refactored out if I move to pyup
+# which requires a requirements.txt file
 def constrained_install(session, *args, **kwargs):
     with tempfile.NamedTemporaryFile() as reqs:
         session.run(
@@ -32,8 +33,19 @@ def format(session):
 def security(session):
     # I'd like to move skip to config file, but bandit doesn't yet support pyproject
     args = session.posargs or LOCATIONS
-    constrained_install(session, 'bandit')
+    constrained_install(session, 'safety', 'bandit')
     session.run('bandit', '--skip=B101', '-r', *args) 
+    with tempfile.NamedTemporaryFile() as reqs:
+        session.run(
+            "poetry",
+            "export",
+            "--dev",
+            "--without-hashes",
+            "--format=requirements.txt",
+            f"--output={reqs.name}",
+            external=True,
+        )
+        session.run("safety", "check", f'--file={reqs.name}', '--full-report')
 
 @nox.session(python=VERSIONS)
 def lint(session):
