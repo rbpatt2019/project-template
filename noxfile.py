@@ -8,5 +8,11 @@ def constrained_install(session, *args, **kwargs):
 
 @nox.session(python=["3.9", "3.8", "3.7"])
 def tests(session):
-    session.run("poetry", "install", external=True)
+    args = session.posargs or []
+
+    # Install app requirements generally
+    session.run("poetry", "install", '--no-dev', external=True)
+    # Install testing requirements explicitly
+    constrained_install(session, 'coverage', 'pytest', 'pytest-clarity', 'pytest-sugar', 'pytest-mock', 'pytest-cov', 'six')
+
     session.run("pytest")
