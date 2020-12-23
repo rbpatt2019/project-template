@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "project-template"
+version = "0.1.0"
+description = "A cookiecutter template implementing as many best practices as possible"
+license = "GPL-3-or-later"
+authors = ["rbpatt2019 <rb.patterson.cross@gmail.com>"]
+homepage = "https://github.com/rbpatt2019/project-template"
+repository = "https://github.com/rbpatt2019/project-template"
+keywords = ["cookiecutter"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
