@@ -1,5 +1,6 @@
-from project_template import console, __version__
 import pytest
+
+from project_template import __version__, console
 
 
 def test_main_called(mock_print):

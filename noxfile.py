@@ -1,5 +1,6 @@
-import nox
 import tempfile
+
+import nox
 
 LOCATIONS = ["src", "tests", "noxfile.py"]
 VERSIONS = ["3.9", "3.8", "3.7"]
