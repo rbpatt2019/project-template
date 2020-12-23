@@ -22,7 +22,8 @@ def constrained_install(session, *args, **kwargs):
 @nox.session(python="3.9")
 def format(session):
     args = session.posargs or LOCATIONS
-    constrained_install(session, "black")
+    constrained_install(session, "isort", "black")
+    session.run("isort", *args)
     session.run("black", *args)
 
 

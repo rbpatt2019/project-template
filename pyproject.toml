@@ -21,6 +21,7 @@ pytest-cov = "^2.10.1"
 six = "^1.15.0"
 pylint = "^2.6.0"
 black = "^20.8b1"
+isort = "^5.6.4"
 
 [tool.coverage.run]
 branch = true
@@ -45,6 +46,11 @@ min-similarity-lines = 5
 ignore-comments = true
 ignore-docstrings = true
 ignore-imports = true
+
+[tool.isort]
+profile = "black"
+skip_gitignore = true
+flaot_to_top = false
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
