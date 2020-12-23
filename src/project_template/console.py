@@ -1,12 +1,8 @@
-from . import __version__ 
+from project_template import __version__
 
 def main(version):
-    """TODO: Docstring for main.
-
-    :function: TODO
-    :returns: TODO
-
-    """
+    """A sample function"""
     print(f"Project is version {version}")
 
-
+if __name__ == "__main__":
+    main(__version__)
