@@ -1,10 +1,6 @@
 from project_template import console, __version__
 import pytest
 
-@pytest.fixture
-def mock_print(mocker):
-    return mocker.patch("builtins.print")
-
 def test_main_called(mock_print):
     """It calls the function"""
     console.main()
