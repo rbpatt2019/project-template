@@ -1,9 +1,11 @@
+import multiprocessing
 import tempfile
 
 import nox
 
 LOCATIONS = ["src", "tests", "noxfile.py"]
 VERSIONS = ["3.9", "3.8", "3.7"]
+CORES = int(multiprocessing.cpu_count() / 2)
 
 # There's a good chance that this will get refactored out if I move to pyup
 # which requires a requirements.txt file
@@ -22,7 +24,7 @@ def constrained_install(session, *args, **kwargs):
 
 
 @nox.session(python="3.9")
-def format(session):
+def form(session):
     args = session.posargs or LOCATIONS
     constrained_install(session, "isort", "black")
     session.run("isort", *args)
@@ -54,7 +56,7 @@ def lint(session):
     # prevent lengthy installs
     args = session.posargs or LOCATIONS
     constrained_install(session, "pylint")
-    session.run("pylint", "--disable=import-error", *args)
+    session.run("pylint", "--disable=import-error", f'-j {CORES}', *args)
 
 
 @nox.session(python=VERSIONS)
