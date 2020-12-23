@@ -6,12 +6,15 @@ VERSIONS=["3.9", "3.8", "3.7"]
 
 def constrained_install(session, *args, **kwargs):
     with tempfile.NamedTemporaryFile() as reqs:
-        session.run('poetry', 'export', '--dev', '--format=requirements.txt', f'--output={regs.name}', external=True)
-        session.install(f'--constraint={regs.name}', *args, **kwargs)
+        session.run('poetry', 'export', '--dev', '--without-hashes', '--format=requirements.txt', f'--output={reqs.name}', external=True)
+        session.install(f'--constraint={reqs.name}', *args, **kwargs)
 
 @nox.session(python=VERSIONS)
 def lint(session):
-    args = session.posargs or LOCATIONS
+    # As pylint requires installed packages and nox spins off isolated venvs,
+    # Import error is silenced. This is checked by pyright, and helps 
+    # prevent lengthy installs
+    args = session.posargs or ["--disable=import-error"] + LOCATIONS
     constrained_install(session, 'pylint')
     session.run('pylint', *args)
 
@@ -24,4 +27,4 @@ def tests(session):
     # Install testing requirements explicitly
     constrained_install(session, 'coverage', 'pytest', 'pytest-clarity', 'pytest-sugar', 'pytest-mock', 'pytest-cov', 'six')
 
-    session.run("pytest")
+    session.run("pytest", *args)
