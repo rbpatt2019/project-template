@@ -24,6 +24,7 @@ black = "^20.8b1"
 isort = "^5.6.4"
 bandit = "^1.7.0"
 safety = "^1.10.0"
+typeguard = "^2.10.0"
 
 [tool.coverage.run]
 branch = true
@@ -38,6 +39,7 @@ addopts = """
 -vv
 --ignore=docs
 --diff-type=split
+--typeguard-packages=project_template
 """
 
 [tool.pylint.messages_control]
