@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 import multiprocessing
 import tempfile
+from typing import Any, List
 
 # pylint: disable=import-error
 import nox  # type: ignore
+from nox.sessions import Session  # type: ignore
 
-LOCATIONS = ["src", "tests", "noxfile.py"]
-VERSIONS = ["3.9", "3.8", "3.7"]
-CORES = int(multiprocessing.cpu_count() / 2)
+LOCATIONS: List[str] = ["src", "tests", "noxfile.py"]
+VERSIONS: List[str] = ["3.9", "3.8", "3.7"]
+CORES: int = int(multiprocessing.cpu_count() / 2)
 
 # There's a good chance that this will get refactored out if I move to pyup
 # which requires a requirements.txt file
-def constrained_install(session, *args, **kwargs):
+def constrained_install(session: Session, *args: str, **kwargs: Any) -> None:
     with tempfile.NamedTemporaryFile() as reqs:
         session.run(
             "poetry",
@@ -26,7 +28,7 @@ def constrained_install(session, *args, **kwargs):
 
 
 @nox.session(python="3.9")
-def form(session):
+def form(session: Session) -> None:
     args = session.posargs or LOCATIONS
     constrained_install(session, "isort", "black")
     session.run("isort", *args)
@@ -34,7 +36,7 @@ def form(session):
 
 
 @nox.session(python=VERSIONS)
-def security(session):
+def security(session: Session) -> None:
     # I'd like to move skip to config file, but bandit doesn't yet support pyproject
     args = session.posargs or LOCATIONS
     constrained_install(session, "safety", "bandit")
@@ -53,7 +55,7 @@ def security(session):
 
 
 @nox.session(python=VERSIONS)
-def lint(session):
+def lint(session: Session) -> None:
     args = session.posargs or LOCATIONS
     session.run("poetry", "install", "--no-dev", external=True)  # To check imports
     constrained_install(session, "pylint", "pytest")  # Pytest required to prevent error
@@ -62,7 +64,7 @@ def lint(session):
 
 
 @nox.session(python=VERSIONS)
-def tests(session):
+def tests(session: Session) -> None:
     args = session.posargs or []
     session.run("poetry", "install", "--no-dev", external=True)
     constrained_install(  # These are required for tests. Don't clutter w/ all dev deps!

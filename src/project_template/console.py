@@ -2,6 +2,6 @@
 from project_template import __version__
 
 
-def main():
+def main() -> None:
     """A sample function"""
     print(f"Project is version {__version__}")
