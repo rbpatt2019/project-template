@@ -26,6 +26,7 @@ bandit = "^1.7.0"
 safety = "^1.10.0"
 typeguard = "^2.10.0"
 darglint = "^1.5.8"
+xdoctest = "^0.15.0"
 
 [tool.coverage.run]
 branch = true

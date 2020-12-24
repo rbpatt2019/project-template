@@ -8,6 +8,7 @@ import nox  # type: ignore
 from nox.sessions import Session  # type: ignore
 
 LOCATIONS: List[str] = ["src", "tests", "noxfile.py"]
+PACKAGE: str = "project_template"
 VERSIONS: List[str] = ["3.9", "3.8", "3.7"]
 CORES: int = int(multiprocessing.cpu_count() / 2)
 
@@ -88,3 +89,23 @@ def tests(session: Session) -> None:
         "six",
     )
     session.run("pytest", *args)
+
+
+@nox.session(python=VERSIONS)
+def doc_tests(session: Session) -> None:
+    """Test docstrings with xdoctest"""
+    args = session.posargs or ["all"]
+    session.run("poetry", "install", "--no-dev", external=True)
+    constrained_install(session, "xdoctest")
+    session.run(
+        "python",
+        "-m",
+        "xdoctest",
+        "--nocolor",
+        "--verbose",
+        "2",
+        "--report",
+        "cdiff",
+        PACKAGE,
+        *args,
+    )
