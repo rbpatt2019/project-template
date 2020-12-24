@@ -1,7 +1,8 @@
 import multiprocessing
 import tempfile
 
-import nox
+# pylint: disable=import-error
+import nox # type: ignore
 
 LOCATIONS = ["src", "tests", "noxfile.py"]
 VERSIONS = ["3.9", "3.8", "3.7"]
@@ -51,22 +52,18 @@ def security(session):
 
 @nox.session(python=VERSIONS)
 def lint(session):
-    # As pylint requires installed packages and nox spins off isolated venvs,
-    # Import error is silenced. This is checked by pyright, and helps
-    # prevent lengthy installs
     args = session.posargs or LOCATIONS
-    constrained_install(session, "pylint")
-    session.run("pylint", "--disable=import-error", f'-j {CORES}', *args)
+    session.run("poetry", "install", "--no-dev", external=True) # To check imports
+    constrained_install(session, "pylint", "pytest") # Pytest required to prevent error
+    session.run("pylint", f'-j {CORES}', *args)
+    session.run("pyright", *args, external=True) # I'd prefer a local install...
 
 
 @nox.session(python=VERSIONS)
 def tests(session):
     args = session.posargs or []
-
-    # Install app requirements generally
     session.run("poetry", "install", "--no-dev", external=True)
-    # Install testing requirements explicitly
-    constrained_install(
+    constrained_install( # These are required for tests. Don't clutter w/ all dev deps!
         session,
         "coverage",
         "pytest",
@@ -76,5 +73,4 @@ def tests(session):
         "pytest-cov",
         "six",
     )
-
     session.run("pytest", *args)
