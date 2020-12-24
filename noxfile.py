@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 import multiprocessing
 import tempfile
 
 # pylint: disable=import-error
-import nox # type: ignore
+import nox  # type: ignore
 
 LOCATIONS = ["src", "tests", "noxfile.py"]
 VERSIONS = ["3.9", "3.8", "3.7"]
@@ -36,8 +37,8 @@ def form(session):
 def security(session):
     # I'd like to move skip to config file, but bandit doesn't yet support pyproject
     args = session.posargs or LOCATIONS
-    constrained_install(session, 'safety', 'bandit')
-    session.run('bandit', '--skip=B101', '-r', *args) 
+    constrained_install(session, "safety", "bandit")
+    session.run("bandit", "--skip=B101", "-r", *args)
     with tempfile.NamedTemporaryFile() as reqs:
         session.run(
             "poetry",
@@ -48,22 +49,23 @@ def security(session):
             f"--output={reqs.name}",
             external=True,
         )
-        session.run("safety", "check", f'--file={reqs.name}', '--full-report')
+        session.run("safety", "check", f"--file={reqs.name}", "--full-report")
+
 
 @nox.session(python=VERSIONS)
 def lint(session):
     args = session.posargs or LOCATIONS
-    session.run("poetry", "install", "--no-dev", external=True) # To check imports
-    constrained_install(session, "pylint", "pytest") # Pytest required to prevent error
-    session.run("pylint", f'-j {CORES}', *args)
-    session.run("pyright", *args, external=True) # I'd prefer a local install...
+    session.run("poetry", "install", "--no-dev", external=True)  # To check imports
+    constrained_install(session, "pylint", "pytest")  # Pytest required to prevent error
+    session.run("pylint", f"-j {CORES}", *args)
+    session.run("pyright", *args, external=True)  # I'd prefer a local install...
 
 
 @nox.session(python=VERSIONS)
 def tests(session):
     args = session.posargs or []
     session.run("poetry", "install", "--no-dev", external=True)
-    constrained_install( # These are required for tests. Don't clutter w/ all dev deps!
+    constrained_install(  # These are required for tests. Don't clutter w/ all dev deps!
         session,
         "coverage",
         "pytest",

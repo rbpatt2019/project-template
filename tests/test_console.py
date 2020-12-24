@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pytest
 
 from project_template import __version__, console

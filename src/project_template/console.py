@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from project_template import __version__
 
 
