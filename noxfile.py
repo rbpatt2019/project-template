@@ -7,10 +7,13 @@ from typing import Any, List
 import nox  # type: ignore
 from nox.sessions import Session  # type: ignore
 
-LOCATIONS: List[str] = ["src", "tests", "noxfile.py", "docs/conf.py"]
+LOCATIONS: List[str] = ["src", "tests", "noxfile.py"]
 PACKAGE: str = "project_template"
 VERSIONS: List[str] = ["3.9", "3.8", "3.7"]
 CORES: int = int(multiprocessing.cpu_count() / 2)
+
+nox.options.stop_on_first_error = True
+nox.options.reuse_existing_virtualenvs = True
 
 # There's a good chance that this will get refactored out if I move to pyup
 # which requires a requirements.txt file
@@ -113,5 +116,6 @@ def doc_tests(session: Session) -> None:
 @nox.session(python="3.9")
 def doc_build(session: Session) -> None:
     """Build the documentation"""
-    constrained_install(session, "sphinx")
+    session.run("poetry", "install", "--no-dev", external=True)
+    constrained_install(session, "sphinx", "sphinx-rtd-theme")
     session.run("sphinx-build", "docs", "docs/_build")

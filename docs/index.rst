@@ -8,4 +8,4 @@ HOLDER TEXT FOR INDEX
    :maxdepth: 1
 
    readme
-   license
+   reference

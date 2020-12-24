@@ -8,9 +8,7 @@ def main() -> None:
     Examples
     --------
     >>> main()
-    Project is version {}
+    Project is version 0.1.0
 
-    """.format(
-        __version__
-    )
+    """
     print(f"Project is version {__version__}")
