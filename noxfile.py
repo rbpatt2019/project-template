@@ -58,7 +58,8 @@ def security(session: Session) -> None:
 def lint(session: Session) -> None:
     args = session.posargs or LOCATIONS
     session.run("poetry", "install", "--no-dev", external=True)  # To check imports
-    constrained_install(session, "pylint", "pytest")  # Pytest required to prevent error
+    # Pytest required to prevent error
+    constrained_install(session, "pylint", "pytest", "pytest-mock")
     session.run("pylint", f"-j {CORES}", *args)
     session.run("pyright", *args, external=True)  # I'd prefer a local install...
 
