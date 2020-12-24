@@ -7,7 +7,7 @@ from typing import Any, List
 import nox  # type: ignore
 from nox.sessions import Session  # type: ignore
 
-LOCATIONS: List[str] = ["src", "tests", "noxfile.py"]
+LOCATIONS: List[str] = ["src", "tests", "noxfile.py", "docs/conf.py"]
 PACKAGE: str = "project_template"
 VERSIONS: List[str] = ["3.9", "3.8", "3.7"]
 CORES: int = int(multiprocessing.cpu_count() / 2)
@@ -101,7 +101,6 @@ def doc_tests(session: Session) -> None:
         "python",
         "-m",
         "xdoctest",
-        "--nocolor",
         "--verbose",
         "2",
         "--report",
@@ -109,3 +108,10 @@ def doc_tests(session: Session) -> None:
         PACKAGE,
         *args,
     )
+
+
+@nox.session(python="3.9")
+def doc_build(session: Session) -> None:
+    """Build the documentation"""
+    constrained_install(session, "sphinx")
+    session.run("sphinx-build", "docs", "docs/_build")
