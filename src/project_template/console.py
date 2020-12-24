@@ -3,5 +3,12 @@ from project_template import __version__
 
 
 def main() -> None:
-    """A sample function"""
+    """Print the current version of the project
+
+    Examples
+    --------
+    >>> main()
+    Project is version
+
+    """
     print(f"Project is version {__version__}")

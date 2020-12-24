@@ -14,6 +14,7 @@ CORES: int = int(multiprocessing.cpu_count() / 2)
 # There's a good chance that this will get refactored out if I move to pyup
 # which requires a requirements.txt file
 def constrained_install(session: Session, *args: str, **kwargs: Any) -> None:
+    """Install packages with poetry version constraint"""
     with tempfile.NamedTemporaryFile() as reqs:
         session.run(
             "poetry",
@@ -29,6 +30,7 @@ def constrained_install(session: Session, *args: str, **kwargs: Any) -> None:
 
 @nox.session(python="3.9")
 def form(session: Session) -> None:
+    """Format code with isort and black"""
     args = session.posargs or LOCATIONS
     constrained_install(session, "isort", "black")
     session.run("isort", *args)
@@ -37,6 +39,7 @@ def form(session: Session) -> None:
 
 @nox.session(python=VERSIONS)
 def security(session: Session) -> None:
+    """Check security with bandit and safety"""
     # I'd like to move skip to config file, but bandit doesn't yet support pyproject
     args = session.posargs or LOCATIONS
     constrained_install(session, "safety", "bandit")
@@ -56,16 +59,21 @@ def security(session: Session) -> None:
 
 @nox.session(python=VERSIONS)
 def lint(session: Session) -> None:
+    """Lint files with pylint and pyright"""
     args = session.posargs or LOCATIONS
     session.run("poetry", "install", "--no-dev", external=True)  # To check imports
     # Pytest required to prevent error
-    constrained_install(session, "pylint", "pytest", "pytest-mock")
+    constrained_install(session, "pylint", "darglint", "pytest", "pytest-mock")
     session.run("pylint", f"-j {CORES}", *args)
     session.run("pyright", *args, external=True)  # I'd prefer a local install...
+    session.run(
+        "darglint", "-s", "numpy", "-z", "short", "-v", "2", "-l", "DEBUG", *args
+    )
 
 
 @nox.session(python=VERSIONS)
 def tests(session: Session) -> None:
+    """Run the test suite with pytest"""
     args = session.posargs or []
     session.run("poetry", "install", "--no-dev", external=True)
     constrained_install(  # These are required for tests. Don't clutter w/ all dev deps!
