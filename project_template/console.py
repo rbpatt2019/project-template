@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+"""Example module for best practices."""
 from project_template import __version__
 
 
 def main() -> None:
-    """Print the current version of the project
+    """Print the current version of the project.
 
     Examples
     --------
