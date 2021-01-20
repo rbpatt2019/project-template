@@ -66,7 +66,7 @@ def lint(session: Session) -> None:
     args = session.posargs or LOCATIONS[:2]
     constrained_install(
         session,
-        "flakehell",
+        "flake8",
         "flake8-annotations",
         "flake8-bugbear",
         "flake8-bandit",
@@ -75,7 +75,7 @@ def lint(session: Session) -> None:
         "darglint",
         "nox",  # Keeps pyright happy
     )
-    session.run("flakehell", "lint", *args)
+    session.run("flake8", *args)
     # I'd prefer a local install...
     session.run("poetry", "run", "pyright", *args, external=True)
 
