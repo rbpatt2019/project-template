@@ -1,6 +1,6 @@
 # .flake8
 [flake8]
-select = ANN,B,B9,C,D,DAR,F,S
+select = ANN,B,B9,C,C4,D,DAR,F,S,SC
 exclude = docs/conf.py
 per-file-ignore = tests/*:S101
 max-line-length = 88
@@ -8,3 +8,5 @@ max-complexity = 10
 docstring-convention = numpy
 docstring-style = numpy
 strictness = short
+dictionaries = en_US,python,technical
+spellcheck-targets = comments

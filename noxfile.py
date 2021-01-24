@@ -17,8 +17,7 @@ VERSIONS: List[str] = ["3.9", "3.8", "3.7"]
 nox.options.stop_on_first_error = True
 nox.options.reuse_existing_virtualenvs = True
 
-# There's a good chance that this will get refactored out if I move to pyup
-# which requires a requirements.txt file
+
 def constrained_install(session: Session, *args: str, **kwargs: Any) -> None:
     """Install packages with poetry version constraint."""
     with tempfile.NamedTemporaryFile() as reqs:
@@ -51,10 +50,12 @@ def lint(session: Session) -> None:
         session,
         "flake8",
         "flake8-annotations",
-        "flake8-bugbear",
         "flake8-bandit",
+        "flake8-bugbear",
+        "flake8-comprehensions",
         "flake8-docstrings",
         "flake8-pytest-style",
+        "flake8-spellcheck",
         "darglint",
     )
     session.run("flake8", *args)
@@ -90,7 +91,7 @@ def tests(session: Session) -> None:
     """Run the test suite with pytest."""
     args = session.posargs or []
     session.run("poetry", "install", "--no-dev", external=True)
-    constrained_install(  # These are required for tests. Don't clutter w/ all dev deps!
+    constrained_install(  # These are required for tests. Don't clutter w/ all dependencies!
         session,
         "coverage",
         "pytest",
