@@ -62,7 +62,7 @@ def security(session: Session) -> None:
 
 @nox.session(python=VERSIONS)
 def lint(session: Session) -> None:
-    """Lint files with flake8 and pyright."""
+    """Lint files with flake8."""
     args = session.posargs or LOCATIONS[:2]
     constrained_install(
         session,
@@ -100,7 +100,7 @@ def tests(session: Session) -> None:
         "pytest-sugar",
         "pytest-mock",
         "pytest-cov",
-        "typeguard",
+        "typeguard",  # Though typing, run best in pytest
         "six",
     )
     session.run("poetry", "run", "pyright", LOCATIONS[2])
