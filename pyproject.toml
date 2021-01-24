@@ -53,6 +53,7 @@ addopts = """
 -vv
 --ignore=docs
 --diff-type=split
+--cov=project_template
 --typeguard-packages=project_template
 """
 
