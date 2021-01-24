@@ -44,23 +44,6 @@ def form(session: Session) -> None:
 
 
 @nox.session(python=VERSIONS)
-def security(session: Session) -> None:
-    """Check security safety."""
-    constrained_install(session, "safety")
-    with tempfile.NamedTemporaryFile() as reqs:
-        session.run(
-            "poetry",
-            "export",
-            "--dev",
-            "--without-hashes",
-            "--format=requirements.txt",
-            f"--output={reqs.name}",
-            external=True,
-        )
-        session.run("safety", "check", f"--file={reqs.name}", "--full-report")
-
-
-@nox.session(python=VERSIONS)
 def lint(session: Session) -> None:
     """Lint files with flake8."""
     args = session.posargs or LOCATIONS[:2]
@@ -75,8 +58,6 @@ def lint(session: Session) -> None:
         "darglint",
     )
     session.run("flake8", *args)
-    # I'd prefer a local install...
-    session.run("poetry", "run", "pyright", *args, external=True)
 
 
 @nox.session(python=VERSIONS)
@@ -85,6 +66,23 @@ def type(session: Session) -> None:
     args = session.posargs or LOCATIONS
     constrained_install(session, "mypy")
     session.run("mypy", "--ignore-missing-imports", *args)
+
+
+@nox.session(python=VERSIONS)
+def security(session: Session) -> None:
+    """Check security safety."""
+    constrained_install(session, "safety")
+    with tempfile.NamedTemporaryFile() as reqs:
+        session.run(
+            "poetry",
+            "export",
+            "--dev",
+            "--without-hashes",
+            "--format=requirements.txt",
+            f"--output={reqs.name}",
+            external=True,
+        )
+        session.run("safety", "check", f"--file={reqs.name}", "--full-report")
 
 
 @nox.session(python=VERSIONS)
