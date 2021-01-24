@@ -73,11 +73,18 @@ def lint(session: Session) -> None:
         "flake8-docstrings",
         "flake8-pytest-style",
         "darglint",
-        "nox",  # Keeps pyright happy
     )
     session.run("flake8", *args)
     # I'd prefer a local install...
     session.run("poetry", "run", "pyright", *args, external=True)
+
+
+@nox.session(python=VERSIONS)
+def type(session: Session) -> None:
+    """Type check files with mypy."""
+    args = session.posargs or LOCATIONS
+    constrained_install(session, "mypy")
+    session.run("mypy", "--ignore-missing-imports", *args)
 
 
 @nox.session(python=VERSIONS)
