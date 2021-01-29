@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "project-template"
-version = "0.2.0"
+version = "0.3.0"
 description = "A cookiecutter template implementing as many best practices as possible"
 license = "GPL-3-or-later"
 authors = ["rbpatt2019 <rb.patterson.cross@gmail.com>"]
