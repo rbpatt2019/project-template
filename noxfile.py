@@ -6,12 +6,12 @@ from typing import Any, List
 import nox
 from nox.sessions import Session
 
+PACKAGE: str = "project_template"
 LOCATIONS: List[str] = [
-    "project_template",
+    PACKAGE,
     "noxfile.py",
     "tests",
 ]
-PACKAGE: str = "project_template"
 VERSIONS: List[str] = ["3.9", "3.8", "3.7"]
 
 nox.options.stop_on_first_error = True
@@ -102,7 +102,6 @@ def tests(session: Session) -> None:
         "typeguard",  # Though typing, run best in pytest
         "six",
     )
-    session.run("poetry", "run", "pyright", LOCATIONS[2])
     session.run("pytest", *args)
 
 
