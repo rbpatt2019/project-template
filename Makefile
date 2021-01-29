@@ -4,7 +4,7 @@ define tags
 git add pyproject.toml
 git commit -m "VERSION bump"
 git tag $(VERSION)
-git push origin master --tags
+git push origin main --tags
 endef
 
 clean:
