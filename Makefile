@@ -44,14 +44,17 @@ test: clean
 
 patch: lint test
 	poetry run nox -s doc_tests doc_build
+	poetry version patch
 	$(tags)
 
 minor: lint test
 	poetry run nox -s doc_tests doc_build
+	poetry version minor
 	$(tags)
 
 major: lint test
 	poetry run nox -s doc_tests doc_build
+	poetry version major
 	$(tags)
 
 dist: clean
